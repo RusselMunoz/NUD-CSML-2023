@@ -32,7 +32,9 @@ public class assignment {
             gradePoint = "R";
         }
 
-        System.out.println("Final Avg: " + Math.round(finalAverage));
+        int roundedFinalAverage = (int) finalAverage;
+
+        System.out.println("Final Avg: " + roundedFinalAverage);
         System.out.println("Grade point: " + gradePoint);
 
         scanner.close();
