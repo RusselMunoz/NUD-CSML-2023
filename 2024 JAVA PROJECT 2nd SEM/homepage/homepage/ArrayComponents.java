@@ -40,6 +40,18 @@ public class ArrayComponents {
         public static String[] getMotherBoardArray() {
             return new String[]{" ", "MSI MEG Z490 GODLIKE", "ASUS ROG Strix B550-F RGB", "ASUS TUF Gaming B550M-PLUS", "MSI MPG X570 GAMING PRO Carbon", "MSI MAG B550M Mortar WiFi Gaming"};
         }
+        
+        
+         public static Map<String, Double> getMotherBoardPrices() {            
+             Map<String, Double> motherboardPrices = new HashMap<>();
+            motherboardPrices.put("", 0.0);
+            motherboardPrices.put("Corsair RM850X 850w", 200.0);
+            motherboardPrices.put("EVGA 550 BP", 200.0);
+            motherboardPrices.put("Thermaltake Touchpower GF3 1350W", 150.0);
+            psuPrices.put("Asus ROG Thor 1000W", 200.0);
+            motherboardPrices.put("EVGA Supernova 850GM", 150.0);
+            return motherboardPrices;
+        }
 
         public static String[] getStorageArray() {
             return new String[]{" ", "SanDisk Pro-G40 SSD", "WD My Passport", "Silicon Power PX10", "Crucial X10", "LaCie Rugged RAID Pro"};
