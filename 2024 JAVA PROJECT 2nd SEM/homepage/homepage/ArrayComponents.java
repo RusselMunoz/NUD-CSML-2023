@@ -12,7 +12,7 @@ public class ArrayComponents {
         // Method to get GPU arrays and prices
         public static Map<String, Double> getGPUPrices() {
             Map<String, Double> gpuPrices = new HashMap<>();
-            gpuPrices.put("", 0.0);
+            gpuPrices.put(" ", 0.0);
             gpuPrices.put("Zotac Gaming RTX 3050", 200.0);
             gpuPrices.put("Gigabyte GeForce GTX 1650", 150.0);
             return gpuPrices;
@@ -49,7 +49,7 @@ public class ArrayComponents {
         }
 
         public static String[] getMotherBoardArray() {
-            return new String[]{" ", "MSI MEG Z490 GODLIKE", "ASUS ROG Strix B550-F RGB", "ASUS TUF Gaming B550M-PLUS", "MSI MPG X570 GAMING PRO Carbon", "MSI MAG B550M Mortar WiFi Gaming"};
+            return new String[]{"", "MSI MEG Z490 GODLIKE", "ASUS ROG Strix B550-F RGB", "ASUS TUF Gaming B550M-PLUS", "MSI MPG X570 GAMING PRO Carbon", "MSI MAG B550M Mortar WiFi Gaming"};
         }
         
         public static Map<String, Double> getMotherboardPrices() {
@@ -69,7 +69,7 @@ public class ArrayComponents {
         
         public static Map<String, Double> getStoragePrices() {
             Map<String, Double> storagePrices = new HashMap<>();
-            storagePrices.put("", 0.0);
+            storagePrices.put(" ", 0.0);
             storagePrices.put("SanDisk Pro-G40 SSD", 200.0);
             storagePrices.put("WD My Passport", 200.0);
             storagePrices.put("Silicon Power PX10", 150.0);
@@ -84,7 +84,7 @@ public class ArrayComponents {
         
         public static Map<String, Double> getCPUPrices() {
             Map<String, Double> cpuPrices = new HashMap<>();
-            cpuPrices.put("", 0.0);
+            cpuPrices.put(" ", 0.0);
             cpuPrices.put("AMD Ryzen 5 3600", 200.0);
             cpuPrices.put("Intel Core i5-10400", 200.0);
             cpuPrices.put("AMD Ryzen 7 3700X", 150.0);
@@ -99,7 +99,7 @@ public class ArrayComponents {
         
         public static Map<String, Double> getRAMPrices() {
             Map<String, Double> ramPrices = new HashMap<>();
-            ramPrices.put("", 0.0);
+            ramPrices.put(" ", 0.0);
             ramPrices.put("HyperX Fury 8GB 2666MHz", 200.0);
             ramPrices.put("OLOy DDR4 RAM 16GB", 200.0);
             ramPrices.put("Corsair Vengeance LPX", 150.0);
@@ -114,7 +114,7 @@ public class ArrayComponents {
         
         public static Map<String, Double> getCasePrices() {
             Map<String, Double> casePrices = new HashMap<>();
-            casePrices.put("", 0.0);
+            casePrices.put(" ", 0.0);
             casePrices.put("NZXT", 200.0);
             casePrices.put("ASUS TUF Gaming GT301 RGB TG with Fan Gaming Chassis", 200.0);
             casePrices.put("INPLAY", 200.0);
@@ -229,5 +229,13 @@ public class ArrayComponents {
         }
     
     }
-    
+
+    public static double getComponentPrice(String component, Map<String, Double> componentPrices) {
+        return componentPrices.getOrDefault(component, 0.0);
+    }
+
+    // Method to get the shipping fee based on the selected region
+    public static double getShippingFee(String region, Map<String, Double> regionPrices) {
+        return regionPrices.getOrDefault(region, 0.0);
+    }
 }
