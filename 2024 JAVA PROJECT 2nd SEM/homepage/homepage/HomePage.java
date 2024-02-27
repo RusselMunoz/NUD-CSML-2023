@@ -3,25 +3,19 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.synth.Region;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.HashMap;
 import java.util.Map;
 import homepage.ArrayComponents.ArrayComponent;
-import java.util.logging.LogRecord;
 
 public final class HomePage extends JFrame {
     private JLabel Logo;
     public JButton Login;
     public JButton Register;
     
-    private JLabel component;
-    private JLabel amount;
-    private JLabel Location;
-    private JLabel Tax;
-    private JLabel Price;
     private JLabel GPU;
     private JLabel PSU;
     private JLabel Fan;
@@ -107,6 +101,13 @@ public final class HomePage extends JFrame {
 
     public HomePage(){
         initializeComponents();
+
+        checkOut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculateAndShowTotal(); // Call the method to show the checkout summary
+            }
+        });
     }
 
     public void initializeComponents() {
@@ -135,11 +136,11 @@ public final class HomePage extends JFrame {
 
         JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 100,10));
         p1.setBackground(Color.decode("#191B1B"));
-        component = new JLabel("Component                                                           Selection");
-        amount = new JLabel("                    Amount");
-        Location = new JLabel("Location");
-        Tax = new JLabel("Tax");
-        Price = new JLabel("Price");
+        JLabel component = new JLabel("Component                                                           Selection");
+        JLabel amount = new JLabel("                    Amount");
+        JLabel Location = new JLabel("Location");
+        JLabel Tax = new JLabel("Tax");
+        JLabel Price = new JLabel("Price");
 
         component.setForeground(Color.WHITE);
         amount.setForeground(Color.WHITE);
@@ -196,6 +197,7 @@ public final class HomePage extends JFrame {
         RAM_REGIONPrices = ArrayComponent.getRAM_REGIONPrices();
         CASE_REGIONPrices = ArrayComponent.getCASE_REGIONPrices();
 
+        
 
         //New object JSpinner
         GPU = new JLabel("GPU");
@@ -206,7 +208,7 @@ public final class HomePage extends JFrame {
         gpuSpinner.setEditor(GPUeditor);
         GPURegionBox = new JComboBox<>(gpuRegionArray); 
         GPUprice = new JLabel(""+ gpuPrices.get(gpuArray[0]));
-        GPUtax = new JLabel("Tax++++++");
+        GPUtax = new JLabel("0");
         GPUShippingFee = new JLabel(""+ GPU_REGIONPrices.get(gpuRegionArray[0]));
 
         PSU = new JLabel("PSU");
@@ -217,7 +219,7 @@ public final class HomePage extends JFrame {
         psuSpinner.setEditor(psueditor);
         PSURegionBox = new JComboBox<>(psuRegionArray);
         PSUprice = new JLabel(""+ psuPrices.get(psuArray[0]));
-        PSUtax = new JLabel("++++++");
+        PSUtax = new JLabel("0");
         PSUShippingFee = new JLabel(""+ PSU_REGIONPrices.get(psuRegionArray[0]));
 
         Fan = new JLabel("Fan");
@@ -228,7 +230,7 @@ public final class HomePage extends JFrame {
         fanSpinner.setEditor(faneditor);
         FANRegionBox = new JComboBox<>(fanRegionArray);
         FANprice = new JLabel(""+ fanPrices.get(fanArray[0]));
-        FANtax = new JLabel("++++++");
+        FANtax = new JLabel("0");
         FANShippingFee = new JLabel(""+ FAN_REGIONPrices.get(fanRegionArray[0]));
 
         Motherboard = new JLabel("MotherBoard");
@@ -239,7 +241,7 @@ public final class HomePage extends JFrame {
         motherboardSpinner.setEditor(motherboardeditor);
         MotherBoardRegionBox = new JComboBox<>(motherboardRegionArray);
         MotherBoardprice = new JLabel(""+ MOTHERBOARD_REGIONPrices.get(motherBArray[0]));
-        MotherBoardtax = new JLabel("++++++");
+        MotherBoardtax = new JLabel("0");
         MotherBoardShippingFee = new JLabel(""+ MOTHERBOARD_REGIONPrices.get(motherboardRegionArray[0]));
 
         Storage = new JLabel("Storage");
@@ -250,7 +252,7 @@ public final class HomePage extends JFrame {
         storageSpinner.setEditor(storageeditor);
         STORAGERegionBox = new JComboBox<>(storageRegionArray);
         STORAGEprice = new JLabel(""+ storagePrices.get(storageArray[0]));
-        STORAGEtax = new JLabel("++++++");
+        STORAGEtax = new JLabel("0");
         STORAGEShippingFee = new JLabel(""+ STORAGE_REGIONPrices.get(storageArray[0]));
 
         CPU = new JLabel("CPU");
@@ -261,7 +263,7 @@ public final class HomePage extends JFrame {
         cpuSpinner.setEditor(cpueditor);
         CPURegionBox = new JComboBox<>(cpuRegionArray);
         CPUprice = new JLabel(""+ cpuPrices.get(cpuArray[0]));
-        CPUtax = new JLabel("++++++");
+        CPUtax = new JLabel("0");
         CPUShippingFee = new JLabel(""+ CPU_REGIONPrices.get(cpuArray[0]));
 
         Ram = new JLabel("Ram");
@@ -272,7 +274,7 @@ public final class HomePage extends JFrame {
         ramSpinner.setEditor(ram_editor);
         RAMRegionBox = new JComboBox<>(ramRegionArray);
         RAMprice = new JLabel(""+ ramPrices.get(ramArray[0]));
-        RAMtax = new JLabel("++++++");
+        RAMtax = new JLabel("0");
         RAMShippingFee = new JLabel(""+ RAM_REGIONPrices.get(cpuArray[0]));
 
         Case = new JLabel("Case");
@@ -283,7 +285,7 @@ public final class HomePage extends JFrame {
         caseSpinner.setEditor(caseeditor);
         CASERegionBox = new JComboBox<>(caseRegionArray);
         CASEprice = new JLabel(""+ casePrices.get(caseArray[0]));
-        CASEtax = new JLabel("++++++");
+        CASEtax = new JLabel("0");
         CASEShippingFee = new JLabel(""+ CASE_REGIONPrices.get(cpuArray[0]));
         
         Register.addActionListener(new ActionListener(){
@@ -575,115 +577,179 @@ public final class HomePage extends JFrame {
     // Update the GPU price based on the selected GPU and spinner value
     private void updateGPUPrice() {
         String selectedGPU = (String) gpuBox.getSelectedItem();
-        double selectedGPUPrice = gpuPrices.get(selectedGPU);
+        Double selectedGPUPrice = gpuPrices.get(selectedGPU);
         int spinnerValue = (int) gpuSpinner.getValue();
-
-        double totalPrice = selectedGPUPrice * spinnerValue;
-        GPUprice.setText("P" + totalPrice);
-
-        String selectedGPURegion = (String) GPURegionBox.getSelectedItem();
-        double shippingFee = GPU_REGIONPrices.get(selectedGPURegion);
-        double totalRegionPrice = shippingFee * spinnerValue;
-        GPUShippingFee.setText("P" + totalRegionPrice);
+    
+        if (selectedGPUPrice != null) {
+            double totalPrice = selectedGPUPrice * spinnerValue;
+            GPUprice.setText("P" + totalPrice);
+    
+            String selectedGPURegion = (String) GPURegionBox.getSelectedItem();
+            Double shippingFee = GPU_REGIONPrices.get(selectedGPURegion);
+    
+            if (shippingFee != null) {
+                GPUShippingFee.setText("P" + shippingFee);
+            } else {
+                GPUShippingFee.setText("Shipping fee not available");
+            }
+        } else {
+            GPUprice.setText("Price not available");
+        }
     }
 
     private void updatePSUPrice() {
         String selectedPSU = (String) psuBox.getSelectedItem();
-        double selectedPSUPrice = psuPrices.get(selectedPSU);
+        Double selectedPSUPrice = psuPrices.get(selectedPSU);
         int spinnerValue = (int) psuSpinner.getValue();
-
-        double totalPrice = selectedPSUPrice * spinnerValue;
-        PSUprice.setText("P" + totalPrice);
-
-        String selectedPSURegion = (String) PSURegionBox.getSelectedItem();
-        double shippingFee = PSU_REGIONPrices.get(selectedPSURegion);
-        double totalRegionPrice = shippingFee * spinnerValue;
-        PSUShippingFee.setText("P" + totalRegionPrice);
+    
+        if (selectedPSUPrice != null) {
+            double totalPrice = selectedPSUPrice * spinnerValue;
+            PSUprice.setText("P" + totalPrice);
+    
+            String selectedPSURegion = (String) PSURegionBox.getSelectedItem();
+            Double shippingFee = PSU_REGIONPrices.get(selectedPSURegion);
+    
+            if (shippingFee != null) {
+                PSUShippingFee.setText("P" + shippingFee);
+            } else {
+                PSUShippingFee.setText("Shipping fee not available");
+            }
+        } else {
+            PSUprice.setText("Price not available");
+        }
     }
     
     private void updateFANPrice() {
         String selectedFAN = (String) fanBox.getSelectedItem();
-        double selectedFANPrice = fanPrices.get(selectedFAN);
+        Double selectedFANPrice = fanPrices.get(selectedFAN);
         int spinnerValue = (int) fanSpinner.getValue();
-        
-        double totalPrice = selectedFANPrice * spinnerValue;
-        FANprice.setText("P"  + totalPrice);
-
-        String selectedFANRegion = (String) FANRegionBox.getSelectedItem();
-        double shippingFee = FAN_REGIONPrices.get(selectedFANRegion);
-        double totalRegionPrice = shippingFee * spinnerValue;
-        FANShippingFee.setText("P" + totalRegionPrice);
+    
+        if (selectedFANPrice != null) {
+            double totalPrice = selectedFANPrice * spinnerValue;
+            FANprice.setText("P" + totalPrice);
+    
+            String selectedFANRegion = (String) FANRegionBox.getSelectedItem();
+            Double shippingFee = FAN_REGIONPrices.get(selectedFANRegion);
+    
+            if (shippingFee != null) {
+                FANShippingFee.setText("P" + shippingFee);
+            } else {
+                FANShippingFee.setText("Shipping fee not available");
+            }
+        } else {
+            FANprice.setText("Price not available");
+        }
     }
-
+    
     private void updateMOTHERBOARDPrice() {
         String selectedMotherboard = (String) motherboardBox.getSelectedItem();
-        double selectedMotherboardPrice = motherboardPrices.get(selectedMotherboard);
+        Double selectedMotherboardPrice = motherboardPrices.get(selectedMotherboard);
         int spinnerValue = (int) motherboardSpinner.getValue();
-        
-        double totalPrice = selectedMotherboardPrice * spinnerValue;
-        MotherBoardprice.setText("P"  + totalPrice);
-
-        String selectedMOTHERBOARDRegion = (String) MotherBoardRegionBox.getSelectedItem();
-        double shippingFee = MOTHERBOARD_REGIONPrices.get(selectedMOTHERBOARDRegion);
-        double totalRegionPrice = shippingFee * spinnerValue;
-        MotherBoardShippingFee.setText("P" + totalRegionPrice);
+    
+        if (selectedMotherboardPrice != null) {
+            double totalPrice = selectedMotherboardPrice * spinnerValue;
+            MotherBoardprice.setText("P" + totalPrice);
+    
+            String selectedMOTHERBOARDRegion = (String) MotherBoardRegionBox.getSelectedItem();
+            Double shippingFee = MOTHERBOARD_REGIONPrices.get(selectedMOTHERBOARDRegion);
+    
+            if (shippingFee != null) {
+                MotherBoardShippingFee.setText("P" + shippingFee);
+            } else {
+                MotherBoardShippingFee.setText("Shipping fee not available");
+            }
+        } else {
+            MotherBoardprice.setText("Price not available");
+        }
     }
 
     private void updateSTORAGEPrice() {
         String selectedStorage = (String) storageBox.getSelectedItem();
-        double selectedStoragePrice = storagePrices.get(selectedStorage);
+        Double selectedStoragePrice = storagePrices.get(selectedStorage);
         int spinnerValue = (int) storageSpinner.getValue();
-        
-        double totalPrice = selectedStoragePrice * spinnerValue;
-        STORAGEprice.setText("P"  + totalPrice);
-
-        String selectedSTORAGERegion = (String) STORAGERegionBox.getSelectedItem();
-        double shippingFee = STORAGE_REGIONPrices.get(selectedSTORAGERegion);
-        double totalRegionPrice = shippingFee * spinnerValue;
-        STORAGEShippingFee.setText("P" + totalRegionPrice);
+    
+        if (selectedStoragePrice != null) {
+            double totalPrice = selectedStoragePrice * spinnerValue;
+            STORAGEprice.setText("P" + totalPrice);
+    
+            String selectedSTORAGERegion = (String) STORAGERegionBox.getSelectedItem();
+            Double shippingFee = STORAGE_REGIONPrices.get(selectedSTORAGERegion);
+    
+            if (shippingFee != null) {
+                STORAGEShippingFee.setText("P" + shippingFee);
+            } else {
+                STORAGEShippingFee.setText("Shipping fee not available");
+            }
+        } else {
+            STORAGEprice.setText("Price not available");
+        }
     }
-
+    
     private void updateCPUPrice() {
         String selectedCPU = (String) cpuBox.getSelectedItem();
-        double selectedCPUPrice = cpuPrices.get(selectedCPU);
+        Double selectedCPUPrice = cpuPrices.get(selectedCPU);
         int spinnerValue = (int) cpuSpinner.getValue();
-        
-        double totalPrice = selectedCPUPrice * spinnerValue;
-        CPUprice.setText("P"  + totalPrice);
-
-        String selectedCPURegion = (String) CPURegionBox.getSelectedItem();
-        double shippingFee = CPU_REGIONPrices.get(selectedCPURegion);
-        double totalRegionPrice = shippingFee * spinnerValue;
-        CPUShippingFee.setText("P" + totalRegionPrice);
+    
+        if (selectedCPUPrice != null) {
+            double totalPrice = selectedCPUPrice * spinnerValue;
+            CPUprice.setText("P" + totalPrice);
+    
+            String selectedCPURegion = (String) CPURegionBox.getSelectedItem();
+            Double shippingFee = CPU_REGIONPrices.get(selectedCPURegion);
+    
+            if (shippingFee != null) {
+                CPUShippingFee.setText("P" + shippingFee);
+            } else {
+                CPUShippingFee.setText("Shipping fee not available");
+            }
+        } else {
+            CPUprice.setText("Price not available");
+        }
     }
 
     private void updateRAMPrice() {
-        String selectedRAM = (String) ramBox.getSelectedItem();
-        double selectedRAMPrice = ramPrices.get(selectedRAM);
-        int spinnerValue = (int) ramSpinner.getValue();
-    
+    String selectedRAM = (String) ramBox.getSelectedItem();
+    Double selectedRAMPrice = ramPrices.get(selectedRAM);
+    int spinnerValue = (int) ramSpinner.getValue();
+
+    if (selectedRAMPrice != null) {
         double totalPrice = selectedRAMPrice * spinnerValue;
         RAMprice.setText("P" + totalPrice);
 
         String selectedRAMRegion = (String) RAMRegionBox.getSelectedItem();
-        double shippingFee = RAM_REGIONPrices.get(selectedRAMRegion);
-        double totalRegionPrice = shippingFee * spinnerValue;
-        RAMShippingFee.setText("P" + totalRegionPrice);
-    }
+        Double shippingFee = RAM_REGIONPrices.get(selectedRAMRegion);
 
-    private void updateCASEPrice() {
-        String selectedCASE = (String) caseBox.getSelectedItem();
-        double selectedCASEPrice = casePrices.get(selectedCASE);
-        int spinnerValue = (int) caseSpinner.getValue();
-        
+        if (shippingFee != null) {
+            RAMShippingFee.setText("P" + shippingFee);
+        } else {
+            RAMShippingFee.setText("Shipping fee not available");
+        }
+    } else {
+        RAMprice.setText("Price not available");
+    }
+}
+
+private void updateCASEPrice() {
+    String selectedCASE = (String) caseBox.getSelectedItem();
+    Double selectedCASEPrice = casePrices.get(selectedCASE);
+    int spinnerValue = (int) caseSpinner.getValue();
+
+    if (selectedCASEPrice != null) {
         double totalPrice = selectedCASEPrice * spinnerValue;
-        CASEprice.setText("P"  + totalPrice);
+        CASEprice.setText("P" + totalPrice);
 
         String selectedCASERegion = (String) CASERegionBox.getSelectedItem();
-        double shippingFee = CASE_REGIONPrices.get(selectedCASERegion);
-        double totalRegionPrice = shippingFee * spinnerValue;
-        CASEShippingFee.setText("P" + totalRegionPrice);
+        Double shippingFee = CASE_REGIONPrices.get(selectedCASERegion);
+
+        if (shippingFee != null) {
+            CASEShippingFee.setText("P" + shippingFee);
+        } else {
+            CASEShippingFee.setText("Shipping fee not available");
+        }
+    } else {
+        CASEprice.setText("Price not available");
     }
+}
 
     //Tax changer
     private void updateGPUTaxLabel() {
@@ -767,6 +833,97 @@ public final class HomePage extends JFrame {
         }
     }
 
+    private void calculateAndShowTotal() {
+        double totalPrice = calculateTotalPrice();
+    
+        JFrame summaryFrame = new JFrame("Checkout Summary");
+        summaryFrame.setSize(400, 200);
+    
+        JLabel totalPriceLabel = new JLabel("Total Price: P" + totalPrice);
+        totalPriceLabel.setFont(new Font("Arial", Font.BOLD, 18));
+    
+        JButton payButton = new JButton("Pay");
+        payButton.addActionListener(e -> {
+            processPayment();
+            performCheckout(); // Call performCheckout when the Pay button is clicked
+        });
+    
+        JPanel panel = new JPanel();
+        panel.add(totalPriceLabel);
+        panel.add(payButton);
+    
+        summaryFrame.add(panel);
+    
+        summaryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        summaryFrame.setLocationRelativeTo(null);
+        summaryFrame.setVisible(true);
+    }
+
+    private void processPayment() {
+        String receiptText = Receipt.generateReceiptText();
+        
+        JOptionPane.showMessageDialog(null, receiptText);
+
+        closeSummaryFrame();
+    }
+
+    private void closeSummaryFrame() {
+        // Close the summary frame
+        Window[] windows = Window.getWindows();
+        for (Window window : windows) {
+            if (window instanceof JFrame) {
+                window.dispose();
+            }
+        }
+    }
+
+    
+    public double calculateTotalPrice() {
+        // Calculate total price based on selected items in spinners and combo boxes
+        double total = 0.0;
+    
+        // Add the total price of each component
+        total += calculateComponentTotal(gpuBox, gpuPrices, gpuSpinner, GPURegionBox, GPU_REGIONPrices);
+        total += calculateComponentTotal(psuBox, psuPrices, psuSpinner, PSURegionBox, PSU_REGIONPrices);
+        total += calculateComponentTotal(fanBox, fanPrices, fanSpinner, FANRegionBox, FAN_REGIONPrices);
+        total += calculateComponentTotal(motherboardBox, motherboardPrices, motherboardSpinner,
+            MotherBoardRegionBox, MOTHERBOARD_REGIONPrices);
+        total += calculateComponentTotal(storageBox, storagePrices, storageSpinner, STORAGERegionBox, STORAGE_REGIONPrices);
+        total += calculateComponentTotal(cpuBox, cpuPrices, cpuSpinner, CPURegionBox, CPU_REGIONPrices);
+        total += calculateComponentTotal(ramBox, ramPrices, ramSpinner, RAMRegionBox, RAM_REGIONPrices);
+        total += calculateComponentTotal(caseBox, casePrices, caseSpinner, CASERegionBox, CASE_REGIONPrices);
+        
+        return total;
+    }
+    
+    private double calculateComponentTotal(
+        JComboBox<String> comboBox, Map<String, Double> prices,
+        JSpinner spinner, JComboBox<String> regionBox, Map<String, Double> regionPrices) {
+
+    String selectedComponent = (String) comboBox.getSelectedItem();
+    Double price = prices.get(selectedComponent);
+    int quantity = (int) spinner.getValue();
+
+    double componentTotal = (price != null) ? price * quantity : 0.0;
+
+    String selectedRegion = (String) regionBox.getSelectedItem();
+    Double shippingFee = regionPrices.get(selectedRegion);
+
+    // Perform null check before invoking doubleValue()
+    double total = componentTotal + ((shippingFee != null) ? shippingFee : 0.0);
+
+    return total;
+}
+
+    private void performCheckout() {
+        String selectedgpu = (String) gpuBox.getSelectedItem();
+        String selectedpsu = (String) psuBox.getSelectedItem();
+    
+        Receipt.setSelectedProducts(selectedgpu, selectedpsu);
+        String receiptText = Receipt.generateReceiptText();
+        System.out.println(receiptText);
+    }
+        
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             HomePage mainframe = new HomePage();
