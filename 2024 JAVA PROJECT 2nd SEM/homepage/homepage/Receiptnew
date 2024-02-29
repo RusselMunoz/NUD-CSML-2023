@@ -1,0 +1,87 @@
+package homepage;
+
+import javax.swing.JComboBox;
+import javax.swing.JSpinner;
+
+public class Receipt {
+    private static String selectedGPU;
+    private static String selectedPSU;
+    private static String selectedFAN;
+    private static String selectedMOTHERBOARD;
+    private static String selectedSTORAGE;
+    private static String selectedCPU;
+    private static String selectedRAM;
+    private static String selectedCASE;
+
+
+    private static double totalPrice;
+    private static double shippingFee;
+
+    public static void setSelectedProducts(String gpu, String psu, String fan, String motherboard,
+    String storage, String cpu, String ram, String computerCase) {
+        selectedGPU = gpu;
+        selectedPSU = psu;
+        selectedFAN = fan;
+        selectedMOTHERBOARD = motherboard;
+        selectedSTORAGE = storage;
+        selectedCPU = cpu;
+        selectedRAM = ram;
+        selectedCASE = computerCase;
+
+    }
+
+    public static void setTransactionDetails(double total, double shipping) {
+        totalPrice = total;
+        shippingFee = shipping;
+    }
+
+    public static String generateReceiptText(JComboBox<String> gpuBox, JSpinner gpuSpinner) {
+        if (selectedGPU == null || selectedPSU == null || selectedFAN == null ||
+        selectedMOTHERBOARD == null || selectedSTORAGE == null || selectedCPU == null ||
+        selectedRAM == null || selectedCASE == null) {
+        return "Error: Incomplete selection. Please choose all components (GPU, PSU, FAN, MOTHERBOARD, STORAGE, CPU, RAM, and CASE) for the receipt.";
+    }
+    
+
+        // Add more details to the receipt as needed
+        StringBuilder receipt = new StringBuilder();
+        receipt.append("Cursor\n");
+        receipt.append("Online Purchase Receipt\n");
+        receipt.append("Order Number: #123456789\n");
+        receipt.append("--------------------------\n");
+        receipt.append("Billing Information\n");
+        receipt.append("Name: \n");
+        receipt.append("Address: \n");
+        receipt.append("Email:\n");
+        receipt.append("Phone: \n");
+        receipt.append("--------------------------\n");
+        receipt.append("Payment Information\n");
+        receipt.append("Payment Method: \n");
+        receipt.append("Total Price: \n").append(totalPrice).append("\n");
+        receipt.append("--------------------------\n");
+        receipt.append("Order Details\n");
+        receipt.append("Item           Quantity         Price         Total\n");
+        receipt.append("Selected GPU: ").append(selectedGPU).append("\n");
+        receipt.append("Selected PSU: ").append(selectedPSU).append("\n");
+        receipt.append("Selected FAN: ").append(selectedFAN).append("\n");
+        receipt.append("Selected MOTHERBOARD: ").append(selectedMOTHERBOARD).append("\n");
+        receipt.append("Selected STORAGE: ").append(selectedSTORAGE).append("\n");
+        receipt.append("Selected CPU: ").append(selectedCPU).append("\n");
+        receipt.append("Selected RAM: ").append(selectedRAM).append("\n");
+        receipt.append("Selected CASE: ").append(selectedCASE).append("\n");
+        receipt.append("--------------------------\n");
+        receipt.append("Subtotal: \n");
+        receipt.append("Shipping Fee: \n").append(shippingFee).append("\n");
+        receipt.append("Tax (%12): \n");
+        receipt.append("--------------------------\n");
+        receipt.append("Grand Total: \n");
+        receipt.append("--------------------------\n");
+        receipt.append("Thank you for shopping with us!\n");
+        receipt.append("For inquiries, contanct support@cursor.com\n");
+        receipt.append("--------------------------");
+
+        // Calculate and add other details based on your application logic
+
+        return receipt.toString();
+    }
+}
