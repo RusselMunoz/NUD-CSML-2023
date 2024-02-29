@@ -13,8 +13,6 @@ import homepage.ArrayComponents.ArrayComponent;
 
 public final class HomePage extends JFrame {
     private JLabel Logo;
-    public JButton Login;
-    public JButton Register;
     
     private JLabel GPU;
     private JLabel PSU;
@@ -122,11 +120,11 @@ public final class HomePage extends JFrame {
 
         JPanel RIGHT_Log_Reg_Panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 100,50));
         RIGHT_Log_Reg_Panel.setBackground(Color.decode("#232527"));
-        Login = new JButton("Login");
+        JButton Login = new JButton("Login");
         Login.setForeground(Color.WHITE);
         Login.setBackground(Color.decode("#232527"));
         Login.setBorder(BorderFactory.createEmptyBorder());
-        Register = new JButton("Register");
+        JButton Register = new JButton("Register");
         Register.setForeground(Color.WHITE);
         Register.setBackground(Color.decode("#232527"));
         Register.setBorder(BorderFactory.createEmptyBorder());
@@ -552,6 +550,13 @@ public final class HomePage extends JFrame {
                 }
         });
 
+    STORAGERegionBox.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            updateSTORAGEPrice();
+        }
+    });
+
     CPURegionBox.addActionListener(new ActionListener() {
         @Override
             public void actionPerformed(ActionEvent e) {
@@ -832,37 +837,26 @@ private void updateCASEPrice() {
             CASEtax.setText("0%");
         }
     }
-
-    private void calculateAndShowTotal() {
-        double totalPrice = calculateTotalPrice();
     
-        JFrame summaryFrame = new JFrame("Checkout Summary");
-        summaryFrame.setSize(400, 200);
-    
-        JLabel totalPriceLabel = new JLabel("Total Price: P" + totalPrice);
-        totalPriceLabel.setFont(new Font("Arial", Font.BOLD, 18));
-    
-        JButton payButton = new JButton("Pay");
-        payButton.addActionListener(e -> {
-            processPayment();
-            performCheckout(); // Call performCheckout when the Pay button is clicked
-        });
-    
-        JPanel panel = new JPanel();
-        panel.add(totalPriceLabel);
-        panel.add(payButton);
-    
-        summaryFrame.add(panel);
-    
-        summaryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        summaryFrame.setLocationRelativeTo(null);
-        summaryFrame.setVisible(true);
-    }
 
     private void processPayment() {
-        String receiptText = Receipt.generateReceiptText();
-        
-        JOptionPane.showMessageDialog(null, receiptText);
+        // Ensure the selected products are set in the Receipt class before generating the receipt text
+        String selectedGPU = (String) gpuBox.getSelectedItem();
+        String selectedPSU = (String) psuBox.getSelectedItem();
+        String selectedFAN = (String) fanBox.getSelectedItem();  // Replace with the actual selected FAN value
+        String selectedMotherboard = (String) motherboardBox.getSelectedItem();  // Replace with the actual selected MOTHERBOARD value
+        String selectedStorage = (String) storageBox.getSelectedItem();  // Replace with the actual selected STORAGE value
+        String selectedCPU = (String) cpuBox.getSelectedItem();  // Replace with the actual selected CPU value
+        String selectedRAM = (String) ramBox.getSelectedItem();  // Replace with the actual selected RAM value
+        String selectedCASE = (String) caseBox.getSelectedItem();  // Replace with the actual selected CASE value
+
+Receipt.setSelectedProducts(selectedGPU, selectedPSU, selectedFAN, selectedMotherboard, 
+                             selectedStorage, selectedCPU, selectedRAM, selectedCASE);
+
+        String receiptText = Receipt.generateReceiptText(CASERegionBox, caseSpinner);
+
+        // Display the receipt as a popup message
+        JOptionPane.showMessageDialog(this, receiptText, "Receipt", JOptionPane.INFORMATION_MESSAGE);
 
         closeSummaryFrame();
     }
@@ -877,8 +871,70 @@ private void updateCASEPrice() {
         }
     }
 
+    // CALCULATION
+    public double calculateAndShowTotal() {
+        double totalPrice = calculateTotalPrice();
+        System.out.println("Total Price: " + totalPrice);
     
-    public double calculateTotalPrice() {
+        double shippingFee = calculateShippingFee(CPURegionBox, CPU_REGIONPrices); // Adjust the arguments
+        System.out.println("Shipping Fee: " + shippingFee);
+        Receipt.setTransactionDetails(totalPrice, shippingFee);
+
+        //debug
+        double totalShippingFees = calculateTotalShippingFees();
+        System.out.println("Total Shipping Fees: " + totalShippingFees);
+    
+        JFrame summaryFrame = new JFrame("Checkout Summary");
+        summaryFrame.setSize(400, 200);
+    
+        JLabel totalPriceLabel = new JLabel("Total Price: P" + totalPrice);
+        totalPriceLabel.setFont(new Font("Arial", Font.BOLD, 18));
+    
+        JButton payButton = new JButton("Pay");
+        payButton.addActionListener(e -> {
+            processPayment();
+            performCheckout(); // Call performCheckout when the Pay button is clicked
+            summaryFrame.dispose();
+        });
+    
+        JPanel panel = new JPanel();
+        panel.add(totalPriceLabel);
+        panel.add(payButton);
+    
+        summaryFrame.add(panel);
+    
+        summaryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        summaryFrame.setLocationRelativeTo(null);
+        summaryFrame.setVisible(true);
+
+        return totalPrice;
+    }
+
+    private double calculateTotalShippingFees() {
+        double totalShippingFees = 0.0;
+    
+        totalShippingFees += calculateShippingFee(GPURegionBox, GPU_REGIONPrices);
+        totalShippingFees += calculateShippingFee(PSURegionBox, PSU_REGIONPrices);
+        totalShippingFees += calculateShippingFee(FANRegionBox, FAN_REGIONPrices);
+        totalShippingFees += calculateShippingFee(MotherBoardRegionBox, MOTHERBOARD_REGIONPrices);
+        totalShippingFees += calculateShippingFee(STORAGERegionBox, STORAGE_REGIONPrices);
+        totalShippingFees += calculateShippingFee(CPURegionBox, CPU_REGIONPrices);
+        totalShippingFees += calculateShippingFee(RAMRegionBox, RAM_REGIONPrices);
+        totalShippingFees += calculateShippingFee(CASERegionBox, CASE_REGIONPrices);
+    
+        return totalShippingFees;
+    }
+    
+
+    private double calculateShippingFee(JComboBox<String> regionBox, Map<String, Double> regionPrices) {
+        // Get the selected region from the JComboBox
+        String selectedRegion = (String) regionBox.getSelectedItem();
+    
+        // Calculate and return the shipping fee for the selected region
+        return regionPrices.get(selectedRegion);
+    }
+
+    private double calculateTotalPrice() {
         // Calculate total price based on selected items in spinners and combo boxes
         double total = 0.0;
     
@@ -904,25 +960,48 @@ private void updateCASEPrice() {
     Double price = prices.get(selectedComponent);
     int quantity = (int) spinner.getValue();
 
+    System.out.println("Selected Component: " + selectedComponent);
+    System.out.println("Price: " + price);
+    System.out.println("Quantity: " + quantity);
+
     double componentTotal = (price != null) ? price * quantity : 0.0;
 
     String selectedRegion = (String) regionBox.getSelectedItem();
     Double shippingFee = regionPrices.get(selectedRegion);
 
-    // Perform null check before invoking doubleValue()
+    System.out.println("Selected Region: " + selectedRegion);
+    System.out.println("Shipping Fee: " + shippingFee);
+
     double total = componentTotal + ((shippingFee != null) ? shippingFee : 0.0);
+
+    System.out.println("Component Total: " + componentTotal);
+    System.out.println("Total: " + total);
 
     return total;
 }
 
-    private void performCheckout() {
-        String selectedgpu = (String) gpuBox.getSelectedItem();
-        String selectedpsu = (String) psuBox.getSelectedItem();
-    
-        Receipt.setSelectedProducts(selectedgpu, selectedpsu);
-        String receiptText = Receipt.generateReceiptText();
-        System.out.println(receiptText);
-    }
+private void performCheckout() {
+    String selectedGPU = (String) gpuBox.getSelectedItem();
+String selectedPSU = (String) psuBox.getSelectedItem();
+String selectedFAN = (String) fanBox.getSelectedItem();  // Replace with the actual selected FAN value
+String selectedMotherboard = (String) motherboardBox.getSelectedItem();  // Replace with the actual selected MOTHERBOARD value
+String selectedStorage = (String) storageBox.getSelectedItem();  // Replace with the actual selected STORAGE value
+String selectedCPU = (String) cpuBox.getSelectedItem();  // Replace with the actual selected CPU value
+String selectedRAM = (String) ramBox.getSelectedItem();  // Replace with the actual selected RAM value
+String selectedCASE = (String) caseBox.getSelectedItem();  // Replace with the actual selected CASE value
+
+Receipt.setSelectedProducts(selectedGPU, selectedPSU, selectedFAN, selectedMotherboard, 
+                             selectedStorage, selectedCPU, selectedRAM, selectedCASE);
+
+    // Generate receipt text
+    String receiptText = Receipt.generateReceiptText(CASERegionBox, caseSpinner);
+
+    // Display the receipt as a popup message
+    JOptionPane.showMessageDialog(this, receiptText, "Receipt", JOptionPane.INFORMATION_MESSAGE);
+
+    // Close the summary frame
+    closeSummaryFrame();
+}
         
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
