@@ -130,7 +130,7 @@ public class ArrayComponents {
 
         public static Map<String, Double> getGPU_REGIONPrices() {
             Map<String, Double> gpuPrices = new HashMap<>();
-            gpuPrices.put("", 0.0);
+            gpuPrices.put(" ", 0.0);
             gpuPrices.put("Alabang", 200.0);
             gpuPrices.put("Bacoor", 200.0);
             gpuPrices.put("Makati", 150.0);
@@ -143,7 +143,7 @@ public class ArrayComponents {
 
         public static Map<String, Double> getPSU_REGIONPrices() {
             Map<String, Double> psuPrices = new HashMap<>();
-            psuPrices.put("", 0.0);
+            psuPrices.put(" ", 0.0);
             psuPrices.put("Alabang", 200.0);
             psuPrices.put("Bacoor", 200.0);
             psuPrices.put("Makati", 150.0);
@@ -156,7 +156,7 @@ public class ArrayComponents {
 
         public static Map<String, Double> getFAN_REGIONPrices() {
             Map<String, Double> fanPrices = new HashMap<>();
-            fanPrices.put("", 0.0);
+            fanPrices.put(" ", 0.0);
             fanPrices.put("Alabang", 200.0);
             fanPrices.put("Bacoor", 200.0);
             fanPrices.put("Makati", 150.0);
@@ -164,7 +164,7 @@ public class ArrayComponents {
         }
 
         public static String[] getMOTHERBOARDRegionArray() {
-            return new String[]{" ", "Alabang", "Bacoor", "Makati"};
+            return new String[]{"", "Alabang", "Bacoor", "Makati"};
         }
 
         public static Map<String, Double> getMOTHEBOARD_REGIONPrices() {
@@ -182,7 +182,7 @@ public class ArrayComponents {
 
         public static Map<String, Double> getSTORAGE_REGIONPrices() {
             Map<String, Double> storagePrices = new HashMap<>();
-            storagePrices.put("", 0.0);
+            storagePrices.put(" ", 0.0);
             storagePrices.put("Alabang", 200.0);
             storagePrices.put("Bacoor", 200.0);
             storagePrices.put("Makati", 150.0);
@@ -195,7 +195,7 @@ public class ArrayComponents {
 
         public static Map<String, Double> getCPU_REGIONPrices() {
             Map<String, Double> cpuPrices = new HashMap<>();
-            cpuPrices.put("", 0.0);
+            cpuPrices.put(" ", 0.0);
             cpuPrices.put("Alabang", 200.0);
             cpuPrices.put("Bacoor", 200.0);
             cpuPrices.put("Makati", 150.0);
@@ -208,7 +208,7 @@ public class ArrayComponents {
 
         public static Map<String, Double> getRAM_REGIONPrices() {
             Map<String, Double> ramPrices = new HashMap<>();
-            ramPrices.put("", 0.0);
+            ramPrices.put(" ", 0.0);
             ramPrices.put("Alabang", 200.0);
             ramPrices.put("Bacoor", 200.0);
             ramPrices.put("Makati", 150.0);
@@ -221,7 +221,7 @@ public class ArrayComponents {
         
         public static Map<String, Double> getCASE_REGIONPrices() {
             Map<String, Double> casePrices = new HashMap<>();
-            casePrices.put("", 0.0);
+            casePrices.put(" ", 0.0);
             casePrices.put("Alabang", 200.0);
             casePrices.put("Bacoor", 200.0);
             casePrices.put("Makati", 150.0);
@@ -237,5 +237,15 @@ public class ArrayComponents {
     // Method to get the shipping fee based on the selected region
     public static double getShippingFee(String region, Map<String, Double> regionPrices) {
         return regionPrices.getOrDefault(region, 0.0);
+    }
+
+    public static String[] getCPURegionArray() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCPURegionArray'");
+    }
+
+    public static Map<String, Double> getCPU_REGIONPrices() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCPU_REGIONPrices'");
     }
 }
