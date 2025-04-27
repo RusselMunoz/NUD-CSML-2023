@@ -1,0 +1,463 @@
+
+-- create
+CREATE TABLE Books (
+    BookID SERIAL PRIMARY KEY,
+    Title VARCHAR(255) NOT NULL,
+    Author VARCHAR(255) NOT NULL,
+    Publisher VARCHAR(255),
+    YearPublish VARCHAR(255), 
+    ISBN VARCHAR(20),
+    Genre VARCHAR(100),
+    Status VARCHAR(10) CHECK (Status IN ('Available', 'Borrowed', 'Lost')),
+    TotalCopies INT,
+    AvailableCopies INT
+);
+
+CREATE TABLE Members (
+    Member_ID SERIAL PRIMARY KEY,
+    FirstName VARCHAR(255) NOT NULL,
+    LastName VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) UNIQUE,
+    Phone VARCHAR(20),
+    Address TEXT,
+    Department VARCHAR(20) CHECK (Department IN ('Faculty Room', 'Student')),
+    DateJoined DATE
+);
+
+CREATE TABLE Librarians (
+    LibrarianID SERIAL PRIMARY KEY,
+    FirstName VARCHAR(255) NOT NULL,
+    LastName VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) UNIQUE,
+    Phone VARCHAR(20),
+    EmploymentStatus VARCHAR(10) CHECK (EmploymentStatus IN ('Full-time', 'Part-time'))
+);
+
+CREATE TABLE Borrowing (
+    LoanID SERIAL PRIMARY KEY,
+    BookID INT NOT NULL,
+    Member_ID INT NOT NULL,
+    LibrarianID INT NOT NULL,
+    BorrowDate DATE NOT NULL,
+    DueDate DATE NOT NULL,
+    ReturnDate DATE,
+    Status VARCHAR(10) CHECK (Status IN ('Borrowed', 'Returned', 'Overdue')),
+    FOREIGN KEY (BookID) REFERENCES Books(BookID),
+    FOREIGN KEY (Member_ID) REFERENCES Members(Member_ID),
+    FOREIGN KEY (LibrarianID) REFERENCES Librarians(LibrarianID)
+);
+
+CREATE TABLE Transactions (
+    TransactionID SERIAL PRIMARY KEY,
+    Member_ID INT NOT NULL,
+    LibrarianID INT NOT NULL,
+    TransactionType VARCHAR(10) CHECK (TransactionType IN ('Borrow', 'Return', 'Payment')),
+    TransactionDate DATE NOT NULL,
+    FOREIGN KEY (Member_ID) REFERENCES Members(Member_ID),
+    FOREIGN KEY (LibrarianID) REFERENCES Librarians(LibrarianID)
+);
+
+INSERT INTO Members (FirstName, LastName, Email, Phone, Address, Department, DateJoined) VALUES
+('Charles', 'Bautista', 'charles.bautista@example.com', '09170000001', '123 Main St', 'Student', '2025-01-15'),
+('Myrine Angela', 'Agustin', 'myrine.agustin@example.com', '09170000002', '124 Main St', 'Student', '2025-01-16'),
+('Artley Dave', 'Roque', 'artley.roque@example.com', '09170000003', '125 Main St', 'Student', '2025-01-17'),
+('Kate Andrea', 'Villuenava', 'kate.villuenava@example.com', '09170000004', '126 Main St', 'Student', '2025-01-18'),
+('Louis', 'Pajirillaga', 'louis.pajirillaga@example.com', '09170000005', '127 Main St', 'Faculty Room', '2025-01-19'),
+('Aivan', 'Anuyo', 'aivan.anuyo@example.com', '09170000006', '128 Main St', 'Student', '2025-01-20'),
+('Daniela', 'Malgapo', 'daniela.malgapo@example.com', '09170000007', '129 Main St', 'Student', '2025-01-21'),
+('Iolo', 'Rebugio', 'iolo.rebugio@example.com', '09170000008', '130 Main St', 'Faculty Room', '2025-01-22'),
+('Ajel', 'Medina', 'ajel.medina@example.com', '09170000009', '131 Main St', 'Student', '2025-01-23'),
+('Russell', 'Carpio', 'russell.carpio@example.com', '09170000010', '132 Main St', 'Student', '2025-01-24'),
+('Hans', 'Galang', 'hans.galang@example.com', '09170000011', '133 Main St', 'Student', '2025-01-25'),
+('Ivan', 'Biso', 'ivan.biso@example.com', '09170000012', '134 Main St', 'Faculty Room', '2025-01-26'),
+('French Michael', 'Leyran', 'french.leyran@example.com', '09170000013', '135 Main St', 'Student', '2025-01-27'),
+('Rose Jean', 'Navarro', 'rose.navarro@example.com', '09170000014', '136 Main St', 'Student', '2025-01-28'),
+('Xyra', 'Llave', 'xyra.llave@example.com', '09170000015', '137 Main St', 'Faculty Room', '2025-01-29'),
+('Zzaj', 'Insigne', 'zzaj.insigne@example.com', '09170000016', '138 Main St', 'Student', '2025-01-30'),
+('Francine', 'Hernandez', 'francine.hernandez@example.com', '09170000017', '139 Main St', 'Student', '2025-01-31'),
+('Jaspher', 'Herrera', 'jaspher.herrera@example.com', '09170000018', '140 Main St', 'Student', '2025-02-01'),
+('Cj', 'Puertullano', 'cj.puertullano@example.com', '09170000019', '141 Main St', 'Faculty Room', '2025-02-02'),
+('Zach', 'Ibea', 'zach.ibea@example.com', '09170000020', '142 Main St', 'Student', '2025-02-03');
+
+INSERT INTO Books (Title, Author, Publisher, YearPublish, ISBN, Genre, Status, TotalCopies, AvailableCopies) VALUES
+('The Lost Kingdom', 'Ava Harrison', 'Sunrise Press', 2020, '9781234567001', 'Fantasy', 'Available', 5, 5),
+('Shadows of Tomorrow', 'Ethan Cross', 'Silver Leaf', 2019, '9781234567002', 'Science Fiction', 'Available', 3, 3),
+('Whispers in the Wind', 'Mila Jensen', 'Evergreen House', 2018, '9781234567003', 'Romance', 'Available', 2, 2),
+('The Silent River', 'Liam Porter', 'Northstone', 2021, '9781234567004', 'Thriller', 'Available', 4, 4),
+('Fading Echoes', 'Sophie Blake', 'Moonlight Publications', 2017, '9781234567005', 'Drama', 'Available', 6, 6),
+('The Glass Empire', 'Noah Brooks', 'Arcadia Press', 2022, '9781234567006', 'Fantasy', 'Available', 7, 7),
+('Stormborn', 'Isabella Reed', 'Sunrise Press', 2020, '9781234567007', 'Adventure', 'Available', 5, 5),
+('Fragments of Us', 'Caleb Knight', 'Harbor House', 2021, '9781234567008', 'Romance', 'Available', 3, 3),
+('Beyond the Horizon', 'Lily Carter', 'Skybound Books', 2016, '9781234567009', 'Science Fiction', 'Available', 2, 2),
+('The Last Heir', 'James Whitmore', 'Evergreen House', 2019, '9781234567010', 'Fantasy', 'Available', 4, 4),
+('Into the Abyss', 'Emma Doyle', 'Silver Leaf', 2018, '9781234567011', 'Thriller', 'Available', 6, 6),
+('The Wild Garden', 'Henry Miles', 'Arcadia Press', 2017, '9781234567012', 'Nature', 'Available', 5, 5),
+('Tides of War', 'Olivia Harper', 'Northstone', 2021, '9781234567013', 'History', 'Available', 8, 8),
+('Broken Stars', 'Lucas Hayes', 'Moonlight Publications', 2020, '9781234567014', 'Science Fiction', 'Available', 3, 3),
+('Seraphina''s Song', 'Natalie Cole', 'Sunrise Press', 2019, '9781234567015', 'Fantasy', 'Available', 7, 7),
+('Parallel Worlds', 'Owen Douglas', 'Skybound Books', 2022, '9781234567016', 'Science Fiction', 'Available', 5, 5),
+('Dawn of Legends', 'Ella Monroe', 'Evergreen House', 2021, '9781234567017', 'Fantasy', 'Available', 4, 4),
+('The Hollow Crown', 'Jackson Ford', 'Silver Leaf', 2018, '9781234567018', 'Adventure', 'Available', 6, 6),
+('City of Ashes', 'Amelia Bennett', 'Arcadia Press', 2017, '9781234567019', 'Fantasy', 'Available', 4, 4),
+('Through Smoke and Fire', 'Ryan Matthews', 'Harbor House', 2019, '9781234567020', 'Drama', 'Available', 5, 5),
+('The Seventh Seal', 'Chloe Armstrong', 'Northstone', 2016, '9781234567021', 'Thriller', 'Available', 3, 3),
+('Waves and Wings', 'Gabriel Pierce', 'Sunrise Press', 2015, '9781234567022', 'Adventure', 'Available', 6, 6),
+('Dreamwalkers', 'Sophia Rivers', 'Moonlight Publications', 2020, '9781234567023', 'Fantasy', 'Available', 4, 4),
+('Mirage', 'Benjamin Holt', 'Skybound Books', 2021, '9781234567024', 'Science Fiction', 'Available', 2, 2),
+('The Iron Pact', 'Isla Warren', 'Evergreen House', 2019, '9781234567025', 'History', 'Available', 5, 5),
+('River of Secrets', 'Nathan Ellis', 'Arcadia Press', 2017, '9781234567026', 'Mystery', 'Available', 4, 4),
+('Call of the Ancients', 'Layla Parker', 'Silver Leaf', 2018, '9781234567027', 'Fantasy', 'Available', 7, 7),
+('Lanterns in the Mist', 'Daniel Vaughn', 'Harbor House', 2020, '9781234567028', 'Drama', 'Available', 3, 3),
+('The Stolen Throne', 'Zoe Chambers', 'Northstone', 2021, '9781234567029', 'Fantasy', 'Available', 6, 6),
+('Phoenix Rising', 'Caleb Wright', 'Sunrise Press', 2019, '9781234567030', 'Adventure', 'Available', 4, 4),
+('Threads of Destiny', 'Isabelle Rhodes', 'Skybound Books', 2017, '9781234567031', 'Romance', 'Available', 5, 5),
+('Frozen Shadows', 'Mason Hunt', 'Moonlight Publications', 2020, '9781234567032', 'Thriller', 'Available', 3, 3),
+('The Forgotten Vale', 'Ella Collins', 'Arcadia Press', 2021, '9781234567033', 'Fantasy', 'Available', 6, 6),
+('Kingdom of Embers', 'Samuel Drake', 'Harbor House', 2018, '9781234567034', 'Fantasy', 'Available', 7, 7),
+('Tales of the Forgotten', 'Abigail Grant', 'Silver Leaf', 2017, '9781234567035', 'Mythology', 'Available', 4, 4),
+('The Keeper''s Code', 'Owen Bailey', 'Northstone', 2016, '9781234567036', 'Adventure', 'Available', 3, 3),
+('Bridges of Fate', 'Madeline Curtis', 'Evergreen House', 2022, '9781234567037', 'Romance', 'Available', 5, 5),
+('Orchid Moon', 'Declan Shaw', 'Skybound Books', 2021, '9781234567038', 'Mystery', 'Available', 4, 4),
+('Whispered Truths', 'Sadie Nash', 'Arcadia Press', 2019, '9781234567039', 'Mystery', 'Available', 5, 5),
+('The Cursed Forest', 'Finn Russell', 'Harbor House', 2017, '9781234567040', 'Fantasy', 'Available', 6, 6),
+('A Kingdom Apart', 'Hannah Lowe', 'Silver Leaf', 2020, '9781234567041', 'Fantasy', 'Available', 7, 7),
+('Rise of the Shadows', 'Dylan Fox', 'Moonlight Publications', 2021, '9781234567042', 'Science Fiction', 'Available', 5, 5),
+('The Gilded Cage', 'Luna Scott', 'Sunrise Press', 2022, '9781234567043', 'Drama', 'Available', 4, 4),
+('Pilgrim Souls', 'Joshua Yates', 'Northstone', 2018, '9781234567044', 'History', 'Available', 5, 5),
+('Crescent Bay', 'Addison Blake', 'Skybound Books', 2017, '9781234567045', 'Romance', 'Available', 3, 3),
+('The Forgotten Kingdom', 'Elijah Boyd', 'Evergreen House', 2020, '9781234567046', 'Fantasy', 'Available', 6, 6),
+('Silent Watchers', 'Piper Holland', 'Arcadia Press', 2021, '9781234567047', 'Thriller', 'Available', 4, 4),
+('Twilight Prophecy', 'Sebastian Archer', 'Silver Leaf', 2019, '9781234567048', 'Fantasy', 'Available', 7, 7),
+('Windswept', 'Aria Lambert', 'Harbor House', 2018, '9781234567049', 'Adventure', 'Available', 5, 5),
+('Sands of Time', 'Leo Franklin', 'Northstone', 2022, '9781234567050', 'History', 'Available', 3, 3),
+('Velvet Skies', 'Nora Bell', 'Moonlight Publications', 2020, '9781234567051', 'Romance', 'Available', 6, 6),
+('Labyrinth of Lies', 'Adrian Vaughn', 'Sunrise Press', 2021, '9781234567052', 'Mystery', 'Available', 5, 5),
+('Burning Stars', 'Lila Harmon', 'Skybound Books', 2017, '9781234567053', 'Science Fiction', 'Available', 4, 4),
+('The Fire Keeper', 'Micah Reed', 'Silver Leaf', 2018, '9781234567054', 'Fantasy', 'Available', 5, 5),
+('Shattered Dreams', 'Paisley Ward', 'Evergreen House', 2019, '9781234567055', 'Drama', 'Available', 3, 3),
+('Eclipsed', 'Tyler Quinn', 'Arcadia Press', 2022, '9781234567056', 'Science Fiction', 'Available', 4, 4),
+('The Emerald Throne', 'Valeria Cross', 'Harbor House', 2021, '9781234567057', 'Fantasy', 'Available', 5, 5),
+('Warden of the West', 'Graham Steele', 'Northstone', 2020, '9781234567058', 'Adventure', 'Available', 6, 6),
+('Veil of Illusions', 'Melody Carter', 'Sunrise Press', 2019, '9781234567059', 'Mystery', 'Available', 7, 7);
+
+INSERT INTO Librarians (FirstName, LastName, Email, Phone, EmploymentStatus) VALUES
+('John', 'Smith', 'john.smith@library.com', '09171111111', 'Full-time'),
+('Sarah', 'Johnson', 'sarah.johnson@library.com', '09172222222', 'Part-time'),
+('Michael', 'Williams', 'michael.williams@library.com', '09173333333', 'Full-time');
+
+--Query#1- Borrow a Book (Insert into Borrowing Table and Update Book Availability)
+INSERT INTO Borrowing (BookID, Member_ID, LibrarianID, BorrowDate, DueDate, Status)
+VALUES (10, 5, 2, CURRENT_DATE, CURRENT_DATE + INTERVAL '14 days', 'Borrowed');
+
+UPDATE Books
+SET Status = 'Borrowed',
+  AvailableCopies = AvailableCopies - 1
+WHERE BookID = 10;
+
+SELECT * FROM Books;
+SELECT 
+    Borrowing.LoanID, 
+    Borrowing.BookID, 
+    Books.Title AS BookTitle, 
+    Borrowing.Member_ID, 
+    Members.FirstName || ' ' || Members.LastName AS MemberName,
+    Borrowing.BorrowDate, 
+    Borrowing.DueDate,
+    Borrowing.ReturnDate,
+    Borrowing.Status
+FROM Borrowing
+JOIN Books ON Borrowing.BookID = Books.BookID
+JOIN Members ON Borrowing.Member_ID = Members.Member_ID;
+
+--Query#2- Return a Book (Update Return Date and Book Availability)
+UPDATE Borrowing
+SET 
+    ReturnDate = DueDate,
+    Status = 'Returned'
+WHERE BookID = 10 AND Member_ID = 5;
+
+UPDATE Books
+SET Status = 'Available',
+  AvailableCopies = AvailableCopies + 1
+WHERE BookID = 10;
+
+SELECT * FROM Books;
+SELECT 
+    Borrowing.LoanID, 
+    Borrowing.BookID, 
+    Books.Title AS BookTitle, 
+    Borrowing.Member_ID, 
+    Members.FirstName || ' ' || Members.LastName AS MemberName,
+    Borrowing.BorrowDate, 
+    Borrowing.DueDate,
+    Borrowing.ReturnDate,
+    Borrowing.Status
+FROM Borrowing
+JOIN Books ON Borrowing.BookID = Books.BookID
+JOIN Members ON Borrowing.Member_ID = Members.Member_ID;
+
+SELECT 
+    Members.Member_ID,
+    Members.FirstName || ' ' || Members.LastName AS MemberName,
+    Borrowing.BookID,
+    Books.Title AS BookTitle,
+    Borrowing.BorrowDate,
+    Borrowing.DueDate,
+    Borrowing.ReturnDate,
+    Borrowing.Status
+FROM Borrowing
+JOIN Books ON Borrowing.BookID = Books.BookID
+JOIN Members ON Borrowing.Member_ID = Members.Member_ID
+ORDER BY Members.Member_ID, Borrowing.BorrowDate DESC;
+    Borrowing.ReturnDate,
+    
+--Query#4- View Member Loan History
+INSERT INTO Borrowing (BookID, member_id, librarianid, BorrowDate, DueDate, ReturnDate, Status)
+VALUES
+(10, 5, 1, '2025-04-01', '2025-04-15', '2025-04-15', 'Returned'),
+(12, 7, 2, '2025-03-28', '2025-04-11', NULL, 'Overdue'),
+(15, 2, 1, '2025-04-05', '2025-04-19', NULL, 'Borrowed'),
+(20, 3, 3, '2025-04-02', '2025-04-16', '2025-04-16', 'Returned'),
+(25, 6, 2, CURRENT_DATE, CURRENT_DATE + INTERVAL '14 days', NULL, 'Borrowed'),
+(30, 8, 3, '2025-04-04', '2025-04-18', NULL, 'Overdue'),
+(35, 9, 1, '2025-04-03', '2025-04-17', '2025-04-17', 'Returned'),
+(40, 10, 1, '2025-03-29', '2025-04-12', NULL, 'Borrowed'),
+(14, 5, 1, '2025-04-01', '2025-04-15', '2025-04-12', 'Returned'),
+(45, 5, 1, '2025-04-02', '2025-04-16', '2025-04-14', 'Returned'),
+(50, 4, 2, '2025-04-06', '2025-04-20', NULL, 'Borrowed');
+
+
+UPDATE Books
+SET Status = 'Borrowed',
+    AvailableCopies = AvailableCopies - 1
+WHERE BookID IN (10, 12, 15, 20, 25, 30, 35, 40, 50);
+
+
+UPDATE Borrowing
+SET Status = 'Returned',
+    ReturnDate = CURRENT_DATE
+WHERE BookID IN (10, 20, 35) AND Status = 'Borrowed';
+
+
+UPDATE Books
+SET Status = 'Available',
+    AvailableCopies = AvailableCopies + 1
+WHERE BookID IN (10, 20, 35);
+
+-- SELECT * FROM Books;
+-- SELECT 
+--     Borrowing.LoanID, 
+--     Borrowing.BookID, 
+--     Books.Title AS BookTitle, 
+--     Borrowing.Member_ID, 
+--     Members.FirstName || ' ' || Members.LastName AS MemberName,
+--     Borrowing.BorrowDate, 
+--     Borrowing.DueDate,
+--     Borrowing.ReturnDate,
+--     Borrowing.Status
+-- FROM Borrowing
+-- JOIN Books ON Borrowing.BookID = Books.BookID
+-- JOIN Members ON Borrowing.Member_ID = Members.Member_ID;
+
+-- -- Query#5- List Overdue Books (Books Not Returned in 14 Days)
+-- SELECT 
+--     Books.BookID AS "Book ID",
+--     Books.Title AS "Book Title",
+--     Members.FirstName || ' ' || Members.LastName AS "Borrower Name",
+--     Borrowing.DueDate AS "Due Date",
+--     CURRENT_DATE - Borrowing.DueDate AS "Days Overdue"
+-- FROM 
+--     Borrowing
+-- JOIN 
+--     Books ON Borrowing.BookID = Books.BookID
+-- JOIN 
+--     Members ON Borrowing.Member_ID = Members.Member_ID
+-- WHERE 
+--     Borrowing.ReturnDate IS NULL 
+--     AND Borrowing.DueDate < CURRENT_DATE
+-- ORDER BY 
+--     "Days Overdue" DESC;
+
+-- Query#6- List All Books by a Specific Author
+-- SELECT 
+--     Books.BookID AS "Book ID",
+--     Books.Title AS "Book Title",
+--     Books.Author AS "Author",
+--     Books.Publisher AS "Publisher",
+--     Books.YearPublish AS "Publication Year",
+--     Books.ISBN AS "ISBN",
+--     Books.Genre AS "Genre",
+--     Books.Status AS "Availability Status",
+--     Books.TotalCopies AS "Total Copies",
+--     Books.AvailableCopies AS "Available Copies"
+-- FROM 
+--     Books
+-- WHERE 
+--     Books.Author = 'Ella Monroe'
+-- ORDER BY 
+--     Books.Title ASC;
+
+-- Query#7- Find Books Published After a Certain Year
+-- SELECT 
+--     Books.BookID AS "Book ID",
+--     Books.Title AS "Book Title",
+--     Books.Author AS "Author",
+--     Books.Publisher AS "Publisher",
+--     Books.YearPublish AS "Publication Year",
+--     Books.ISBN AS "ISBN",
+--     Books.Genre AS "Genre",
+--     Books.Status AS "Availability Status",
+--     Books.TotalCopies AS "Total Copies",
+--     Books.AvailableCopies AS "Available Copies"
+-- FROM 
+--     Books
+-- WHERE 
+--     -- CAST(Books.YearPublish AS INTEGER) > 2010
+--     CAST(Books.YearPublish AS INTEGER) = 2021
+-- ORDER BY 
+--     CAST(Books.YearPublish AS INTEGER) DESC,
+--     Books.Title ASC;
+
+-- Query#8- Count Total Books in the Library
+-- SELECT 
+--     COUNT(*) AS "Total Books in Library",
+--     SUM(Books.TotalCopies) AS "Total Physical Copies",
+--     SUM(Books.AvailableCopies) AS "Currently Available Copies",
+--     SUM(Books.TotalCopies) - SUM(Books.AvailableCopies) AS "Currently Borrowed Copies"
+-- FROM 
+--     Books;
+
+-- Query#9- View All Members Who Borrowed a Specific Book
+-- SELECT 
+--     Members.Member_ID AS "Member ID",
+--     Members.FirstName || ' ' || Members.LastName AS "Member Name",
+--     Members.Email AS "Email",
+--     Members.Phone AS "Phone",
+--     Books.Title AS "Book Title",
+--     Books.Author AS "Author",
+--     Borrowing.BorrowDate AS "Borrow Date",
+--     Borrowing.DueDate AS "Due Date",
+--     Borrowing.ReturnDate AS "Return Date",
+--     CASE 
+--         WHEN Borrowing.ReturnDate IS NULL AND Borrowing.DueDate < CURRENT_DATE THEN 'Overdue'
+--         WHEN Borrowing.ReturnDate IS NULL THEN 'Currently Borrowed'
+--         ELSE 'Returned'
+--     END AS "Loan Status"
+-- FROM 
+--     Borrowing
+-- JOIN 
+--     Members ON Borrowing.Member_ID = Members.Member_ID
+-- JOIN 
+--     Books ON Borrowing.BookID = Books.BookID
+-- WHERE 
+--     Books.BookID = 10
+-- ORDER BY 
+--     Borrowing.BorrowDate DESC;
+
+-- Query#10- Find Borrowing History of a Specific Member
+-- SELECT 
+--     Members.Member_ID AS "Member ID",
+--     Members.FirstName || ' ' || Members.LastName AS "Member Name",
+--     Books.Title AS "Book Title",
+--     Books.Author AS "Author",
+--     Books.ISBN AS "ISBN",
+--     Borrowing.BorrowDate AS "Borrow Date",
+--     Borrowing.DueDate AS "Due Date",
+--     Borrowing.ReturnDate AS "Return Date",
+--     CASE 
+--         WHEN Borrowing.ReturnDate IS NULL AND CURRENT_DATE > Borrowing.DueDate THEN 'OVERDUE'
+--         WHEN Borrowing.ReturnDate IS NULL THEN 'BORROWED'
+--         ELSE 'RETURNED'
+--     END AS "Status"
+-- FROM 
+--     Borrowing
+-- JOIN 
+--     Members ON Borrowing.Member_ID = Members.Member_ID
+-- JOIN 
+--     Books ON Borrowing.BookID = Books.BookID
+-- WHERE 
+--     Borrowing.Member_ID = 5
+-- ORDER BY 
+--     Borrowing.BorrowDate DESC;
+
+-- Query#11- List All Available Books of a Specific Genre
+-- SELECT 
+--     Books.BookID AS "Book ID",
+--     Books.Title AS "Book Title",
+--     Books.Author AS "Author",
+--     Books.Publisher AS "Publisher",
+--     Books.YearPublish AS "Publication Year",
+--     Books.Genre AS "Genre",
+--     Books.AvailableCopies AS "Available Copies"
+-- FROM 
+--     Books
+-- WHERE 
+--     Books.Genre = 'Science Fiction'
+--     AND Books.AvailableCopies > 0
+--     AND Books.Status = 'Available'
+-- ORDER BY 
+--     Books.Title ASC;
+
+-- Query#12- Calculate the Total Number of Books Borrowed by Each Member
+-- SELECT
+--     Members.Member_ID AS "Member ID",
+--     Members.FirstName || ' ' || Members.LastName AS "Member Name",
+--     COUNT(Borrowing.LoanID) AS "Total Books Borrowed"
+-- FROM
+--     Members
+-- LEFT JOIN
+--     Borrowing ON Members.Member_ID = Borrowing.Member_ID
+-- GROUP BY
+--     Members.Member_ID,
+--     Members.FirstName,
+--     Members.LastName
+-- ORDER BY
+--     "Total Books Borrowed" DESC;
+
+-- Query#13- List All Overdue Books Not Yet Returned
+-- SELECT
+--     Books.Title AS "Book Title",
+--     Members.FirstName || ' ' || Members.LastName AS "Borrower",
+--     Borrowing.DueDate AS "Due Date",
+--     CURRENT_DATE - Borrowing.DueDate AS "Days Overdue",
+--     (CURRENT_DATE - Borrowing.DueDate) * 0.50 AS "Estimated Fine"
+-- FROM
+--     Borrowing
+-- JOIN Books ON Borrowing.BookID = Books.BookID
+-- JOIN Members ON Borrowing.Member_ID = Members.Member_ID
+-- WHERE
+--     Borrowing.ReturnDate IS NULL
+--     AND Borrowing.DueDate < CURRENT_DATE
+-- ORDER BY
+--     "Days Overdue" DESC;
+
+-- Query#14- List the Librarians Who Processed the Most Borrowings
+-- SELECT
+--     Librarians.LibrarianID AS "Librarian ID",
+--     Librarians.FirstName || ' ' || Librarians.LastName AS "Librarian Name",
+--     COUNT(Borrowing.LoanID) AS "Total Processed"
+-- FROM
+--     Librarians
+-- LEFT JOIN
+--     Borrowing ON Librarians.LibrarianID = Borrowing.LibrarianID
+-- GROUP BY
+--     Librarians.LibrarianID,
+--     Librarians.FirstName,
+--     Librarians.LastName
+-- ORDER BY
+--     "Total Processed" DESC;
+    
+-- Query#15- Find All Books Borrowed but Not Yet Returned
+SELECT
+    Books.Title AS "Book Title",
+    Members.FirstName || ' ' || Members.LastName AS "Borrower",
+    Borrowing.BorrowDate AS "Borrowed On",
+    Borrowing.DueDate AS "Due Date"
+FROM
+    Borrowing
+JOIN Books ON Borrowing.BookID = Books.BookID
+JOIN Members ON Borrowing.Member_ID = Members.Member_ID
+WHERE
+    Borrowing.ReturnDate IS NULL
+ORDER BY
+    Borrowing.DueDate ASC;
